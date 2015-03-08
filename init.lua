@@ -14,7 +14,7 @@ function save()
         windows_of_app = {}
         current_desktop[app:title()] = windows_of_app
       end
-      windows_of_app[w:title()] = w:frame()
+      windows_of_app[w:id()] = w:frame()
   end
 end
 
@@ -26,12 +26,12 @@ function restore()
       local app = w:application()
       local windows_of_app = current_desktop[app:title()]
       if windows_of_app ~= nil then
-        oldframe = windows_of_app[w:title()]
+        oldframe = windows_of_app[w:id()]
         if oldframe ~= nill then
           print("Restoring windows ", w:title(), "to its orginal position")
           w:setframe(oldframe)
         else
-          print("Couldn't find old frame of", w:title(), "defaulting it")
+          print("Couldn't find old frame of", w:id(), "defaulting it")
           local maxWidth = 0
           local maxFrame = nil
           for t,f in pairs(windows_of_app) do
