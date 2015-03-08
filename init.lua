@@ -2,10 +2,6 @@ local hotkey = require "mjolnir.hotkey"
 local window = require "mjolnir.window"
 local application = require "mjolnir.application"
 
-local function isempty(s)
-  return s == nil or s == ''
-end
-
 current_desktop = {}
 
 function save()
