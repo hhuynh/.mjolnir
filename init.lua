@@ -65,7 +65,7 @@ end
 
 save()
 
-save_timer = timer.new(60, save)
+save_timer = timer.new(120, save)
 save_timer:start()
 
 -- watch for screen changes (monitor plug/unplug)
