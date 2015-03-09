@@ -3,6 +3,7 @@ local window = require "mjolnir.window"
 local application = require "mjolnir.application"
 local sw = require "mjolnir._asm.watcher.screen"
 local screen = require "mjolnir.screen"
+local timer = require "mjolnir._asm.timer"
 
 screen_saves = {}
 
@@ -62,11 +63,13 @@ end
 
 -----------------------------------------------------------------------
 
--- save my curent screen
 save()
 
+save_timer = timer.new(60, save)
+save_timer:start()
+
 -- watch for screen changes (monitor plug/unplug)
-function screen_changed(x)
+function screen_changed()
   restore()
 end
 
