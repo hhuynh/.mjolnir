@@ -9,7 +9,7 @@ screen_saves = {}
 
 function save()
   mainscreen = screen.mainscreen()
-  if mainscreen == nil then
+  if mainscreen == nil or mainscreen:name() == nil then
     return
   end
   
@@ -34,7 +34,7 @@ end
 
 function restore()
   mainscreen = screen.mainscreen()
-  if mainscreen == nil then
+  if mainscreen == nil or mainscreen:name() == nil then
     return
   end
   
