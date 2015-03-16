@@ -4,8 +4,23 @@ local application = require "mjolnir.application"
 local sw = require "mjolnir._asm.watcher.screen"
 local screen = require "mjolnir.screen"
 local timer = require "mjolnir._asm.timer"
+local setting = require "mjolnir._asm.settings"
+local json = require "mjolnir._asm.data.json"
 
 screen_saves = {}
+
+function init_screen_saves()
+  saved = setting.get("screen_saves")
+  if saved ~= nil then
+    screen_saves = json.decode(saved)
+    print("Found saved screen_saves... restoring")
+    restore()
+  else
+    print("No screen_saves found on disk")
+    save()
+  end
+end
+  
 
 function save()
   mainscreen = screen.mainscreen()
@@ -30,6 +45,7 @@ function save()
   end
   
   screen_saves[mainscreen:name()] = current_desktop
+  setting.set_data("screen_saves", json.encode(screen_saves))
 end
 
 function restore()
@@ -45,7 +61,6 @@ function restore()
     return
   end
   
-  local win = window.focusedwindow()
   local open_windows = window.visiblewindows()
   
   for k,w in pairs(open_windows) do
@@ -58,9 +73,24 @@ function restore()
         end
       end
   end
-  win:focus()
 end
 
+function persist_screen_save()
+  print("Saving screen_saves to disk")
+  setting.set_data("screen_saves", json.encode(screen_saves))
+end
+
+function load_screen_save()
+  saved = setting.get("screen_saves")
+  if saved ~= nil then
+    screen_saves = json.decode(saved)
+    print("Found saved screen_saves. Restoring")
+    restore()
+  else
+    print("Couldn't find any screen saves on disk")
+    return
+  end
+end
 -----------------------------------------------------------------------
 
 save()
@@ -75,3 +105,6 @@ end
 
 screen_watcher = sw.new(screen_changed)
 screen_watcher:start()
+
+hotkey.bind({"cmd", "alt"}, "6", persist_screen_save)
+hotkey.bind({"cmd", "alt"}, "7", load_screen_save)
