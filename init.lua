@@ -6,8 +6,10 @@ local screen = require "mjolnir.screen"
 local timer = require "mjolnir._asm.timer"
 local setting = require "mjolnir._asm.settings"
 local json = require "mjolnir._asm.data.json"
+local pasteboard = require "mjolnir._asm.data.pasteboard"
 
 screen_saves = {}
+change_count = pasteboard.changecount()
 
 function init_screen_saves()
   saved = setting.get("screen_saves")
@@ -75,11 +77,14 @@ function restore()
   end
 end
 
+-- save screens to disk
 function persist_screen_save()
   print("Saving screen_saves to disk")
   setting.set_data("screen_saves", json.encode(screen_saves))
 end
 
+
+-- load screens from disk
 function load_screen_save()
   saved = setting.get("screen_saves")
   if saved ~= nil then
@@ -91,12 +96,24 @@ function load_screen_save()
     return
   end
 end
------------------------------------------------------------------------
 
-save()
+-- clear clipboard if there's something new in the clipboard based on change count
+function clear_clipboard()
+  local newChangeCount = pasteboard.changecount()
+  if (newChangeCount ~= change_count) then
+    pasteboard.setcontents("")
+    change_count = pasteboard.changecount()
+    print("Clipboard content was cleared")
+  end
+end
+
+------------  MAIN --------------------------------------------
 
 save_timer = timer.new(120, save)
 save_timer:start()
+
+clear_clipboard_timer = timer.new(300, clear_clipboard)
+clear_clipboard_timer:start()
 
 -- watch for screen changes (monitor plug/unplug)
 function screen_changed()
