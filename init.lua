@@ -100,10 +100,13 @@ end
 -- clear clipboard if there's something new in the clipboard based on change count
 function clear_clipboard()
   local newChangeCount = pasteboard.changecount()
-  if (newChangeCount ~= change_count) then
+  if (newChangeCount == change_count) then
     pasteboard.setcontents("")
-    change_count = pasteboard.changecount()
     print("Clipboard content was cleared")
+    change_count = pasteboard.changecount()
+  else
+    print("Clipboard was not cleared")
+    change_count = newChangeCount
   end
 end
 
@@ -112,7 +115,7 @@ end
 save_timer = timer.new(120, save)
 save_timer:start()
 
-clear_clipboard_timer = timer.new(300, clear_clipboard)
+clear_clipboard_timer = timer.new(180, clear_clipboard)
 clear_clipboard_timer:start()
 
 -- watch for screen changes (monitor plug/unplug)
