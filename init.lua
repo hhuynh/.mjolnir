@@ -47,7 +47,6 @@ function save()
   end
   
   screen_saves[mainscreen:name()] = current_desktop
-  setting.set_data("screen_saves", json.encode(screen_saves))
 end
 
 function restore()
