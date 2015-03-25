@@ -111,10 +111,10 @@ end
 
 ------------  MAIN --------------------------------------------
 
-save_timer = timer.new(120, save)
+save_timer = timer.new(125, save)
 save_timer:start()
 
-clear_clipboard_timer = timer.new(180, clear_clipboard)
+clear_clipboard_timer = timer.new(187, clear_clipboard)
 clear_clipboard_timer:start()
 
 -- watch for screen changes (monitor plug/unplug)
